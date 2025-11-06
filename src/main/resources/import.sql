@@ -1,0 +1,77 @@
+INSERT INTO booking_status (name) VALUES('PENDING');
+INSERT INTO booking_status (name) VALUES('CONFIRMED');
+INSERT INTO booking_status (name) VALUES('PAID');
+INSERT INTO booking_status (name) VALUES('CANCELED');
+
+INSERT INTO extra_services (name, description, price) VALUES ('Wi-Fi Premium', 'Acceso a red Wi-Fi privada de alta velocidad.', 3.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Decoración Especial', 'Decoración personalizada para eventos especiales.', 15.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Mesa Privada', 'Reserva en zona privada o con vista preferencial.', 20.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Música en Vivo', 'Disfruta de música en vivo durante tu cena.', 25.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Menú Degustación', 'Degustación de platillos especiales del chef.', 35.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Pastel Personalizado', 'Pastel artesanal con decoración especial.', 18.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Silla para Niños', 'Silla especial para niños pequeños.', 0.00);
+INSERT INTO extra_services (name, description, price) VALUES ('Comida para Mascotas', 'Comida especial para mascotas acompañantes.', 5.00);
+
+INSERT INTO payment_methods (name) VALUES ('Efectivo');
+INSERT INTO payment_methods (name) VALUES ('Tarjeta de Crédito');
+INSERT INTO payment_methods (name) VALUES ('Tarjeta de Débito');
+INSERT INTO payment_methods (name) VALUES ('Transferencia');
+INSERT INTO payment_methods (name) VALUES ('Apple Pay');
+INSERT INTO payment_methods (name) VALUES ('Cheque');
+INSERT INTO payment_methods (name) VALUES ('Mercado Pago');
+INSERT INTO payment_methods (name) VALUES ('PayPal');
+INSERT INTO payment_methods (name) VALUES ('Lavando platos');
+
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Planta Baja', 'Zona principal del restaurante', true, NULL);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Planta Alta', 'Segundo nivel para comensales', true, NULL);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Terraza Exterior', 'Área al aire libre para clientes', true, NULL);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Bar Principal', 'Zona de bar y cocteles', true, NULL);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Lobby', 'Zona de recepción de clientes', true, 1);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Salón Principal', 'Área general de comensales', false, 1);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Patio Interior', 'Zona central con techo retráctil', true, 1);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Salón Privado 1', 'Salón exclusivo pequeño', true, 6);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Salón Privado 2', 'Salón exclusivo mediano', true, 6);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Terraza Alta', 'Área elevada con vista', true, 2);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Salón VIP', 'Zona premium exclusiva', true, 2);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Zona Lounge', 'Espacio lounge al aire libre', true, 3);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Área Fumadores', 'Zona para fumadores', true, 3);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Barra Central', 'Bar principal para bebidas', true, 4);
+INSERT INTO areas (name, description, available, parent_area_id) VALUES ('Cava', 'Área de cava de vinos', true, 4);
+
+
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-1', 4, false, 1, 'Mesa cerca de la entrada, vista al salón');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-2', 2, false, 1, 'Mesa pequeña junto a la ventana');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-3', 6, true, 1, 'Mesa grande para grupos, cerca del centro');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Terraza-1', 4, true, 2, 'Mesa exterior con sombrilla');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Terraza-2', 2, true, 2, 'Mesa pequeña en zona tranquila de la terraza');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Terraza-3', 4, true, 2, 'Mesa para 4 con buena ventilación');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Salon-1', 6, true, 3, 'Mesa familiar en el salón principal');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Salon-2', 4, true, 3, 'Mesa estándar en zona central del salón');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Salon-3', 8, true, 3, 'Mesa para grupos grandes, reservada para eventos');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-VIP-1', 4, true, 4, 'Mesa en área VIP con privacidad');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-VIP-2', 6, true, 4, 'Mesa VIP para reuniones pequeñas');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Barra-1', 2, true, 5, 'Asiento frente a la barra, ideal para cocteles');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Barra-2', 2, true, 5, 'Taburete junto a la barra');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa PB-Barra-3', 2, true, 5, 'Mesa alta cerca del bartender');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Piso2-1', 4, true, 6, 'Mesa del segundo piso con buena vista');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Piso2-2', 4, true, 6, 'Mesa cómoda para 4 en planta alta');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Piso2-Terraza-1', 4, true, 7, 'Mesa en terraza alta con panorámica');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Piso2-Terraza-2', 2, false, 7, 'Mesa íntima en terraza superior');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Piso2-Privado-1', 8, true, 8, 'Mesa grande en salón privado, ideal para eventos');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Piso2-Privado-2', 6, true, 8, 'Mesa privada para reuniones y celebraciones');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Exterior-1', 4, true, 9, 'Mesa exterior con sombra natural');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Exterior-2', 2, false, 9, 'Mesa pequeña exterior junto al pasillo');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Exterior-3', 6, true, 9, 'Mesa exterior para familias o grupos');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa TerrazaVIP-1', 4, true, 10, 'Mesa VIP en terraza con servicio especial');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa TerrazaVIP-2', 4, false, 10, 'Mesa exclusiva en zona VIP de terraza');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa TerrazaVIP-3', 2, true, 10, 'Mesa íntima en zona VIP');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Patio-1', 4, true, 11, 'Mesa en patio interior, ambiente tranquilo');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Patio-2', 6, true, 11, 'Mesa grande en patio para grupos');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Patio-Barra-1', 2, true, 12, 'Asiento junto a la barra en zona de patio');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Patio-Barra-2', 2, true, 12, 'Taburete en barra del patio');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Rooftop-1', 4, true, 13, 'Mesa en rooftop, vista panorámica');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Rooftop-2', 2, true, 13, 'Mesa pequeña en rooftop para parejas');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Rooftop-3', 6, true, 13, 'Mesa amplia en rooftop para grupos');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Rooftop-Privado-1', 8, true, 14, 'Área privada en rooftop para eventos exclusivos');
+INSERT INTO restaurant_tables (name, capacity, available, area_id, description) VALUES ('Mesa Rooftop-Privado-2', 6, true, 14, 'Mesa privada en rooftop con servicio dedicado');
+

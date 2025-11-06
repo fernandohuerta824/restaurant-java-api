@@ -1,0 +1,9 @@
+package com.fernando.sprinboot.restaurant.proyect.restaurant.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.fernando.sprinboot.restaurant.proyect.restaurant.models.PaymentMethod;
+
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
+    
+}
