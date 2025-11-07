@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fernando.sprinboot.restaurant.proyect.restaurant.exceptions.ResourceNotFoundException;
-
+import com.fernando.sprinboot.restaurant.proyect.restaurant.dto.area.AreaShortInfoDto;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.dto.booking.BookingDto;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.dto.booking.BookingRequestDto;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.dto.booking.BookingServiceRequestDto;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.exceptions.BussinessException;
+import com.fernando.sprinboot.restaurant.proyect.restaurant.mappers.AreaMapper;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.mappers.BookingMapper;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.mappers.BookingServiceMapper;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.models.Booking;
@@ -25,6 +26,7 @@ import com.fernando.sprinboot.restaurant.proyect.restaurant.models.BookingExtraS
 import com.fernando.sprinboot.restaurant.proyect.restaurant.models.BookingStatus;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.models.ExtraService;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.models.RestaurantTable;
+import com.fernando.sprinboot.restaurant.proyect.restaurant.repositories.AreaRepository;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.repositories.BookingRepository;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.repositories.BookingServiceRepository;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.repositories.BookingStatusRepository;
@@ -41,6 +43,8 @@ public class BookingService {
     private final BookingServiceRepository bookingServiceRepository;
     private final ExtraSevicesRepository extraServicesRepository;
     private final BookingServiceMapper bookingServiceMapper;
+    private final AreaMapper areaMapper;
+    private final AreaRepository areaRepository;
 
     public BookingService(
         BookingRepository bookingRepository, 
@@ -49,7 +53,9 @@ public class BookingService {
         RestaurantTableRepository restaurantTableRepository,
         BookingServiceRepository bookingServiceRepository,
         ExtraSevicesRepository extraServicesRepository,
-        BookingServiceMapper bookingServiceMapper
+        BookingServiceMapper bookingServiceMapper,
+        AreaMapper areaMapper,
+        AreaRepository areaRepository
     ) {
         this.bookingRepository = bookingRepository;
         this.bookingMapper = bookingMapper;
@@ -58,6 +64,9 @@ public class BookingService {
         this.bookingServiceRepository = bookingServiceRepository;
         this.extraServicesRepository = extraServicesRepository;
         this.bookingServiceMapper = bookingServiceMapper;
+        this.areaMapper = areaMapper;
+        this.areaRepository = areaRepository;
+
     }
 
     // Validar que la hora de inicio sea antes de la hora de fin
@@ -90,13 +99,23 @@ public class BookingService {
     // Verifica que la mesa exista
     // Verificar que la mesa esté disponible en general
     // Verificar que la mesa no esté reservada en el mismo horario
+
     public void addTablesToBooking(Booking booking, Set<Long> tableIds) {
         tableIds.forEach(t -> {
             RestaurantTable table = restaurantTableRepository.findById(t)
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid table ID: " + t));
 
-            if(!table.getAvailable() || !table.getArea().getAvailable()) {
+            if(!table.getAvailable()) {
                 throw new BussinessException("Table with ID " + t + " is not available");
+            }
+
+            AreaShortInfoDto current = areaMapper.toShortInfoDto(table.getArea());
+            while(current != null) {
+                if(!current.getAvailable()) {
+                    throw new BussinessException("Area \"" + current.getName() + "\" is not available right now");
+                }
+
+                current = areaRepository.findShortInfoById(current.getParentAreaId()).orElse(null);
             }
 
             if(bookingRepository.isTableNotAvailable(
@@ -114,7 +133,7 @@ public class BookingService {
 
     // Agregar servicios adicionales a la reserva
     // Verifica que el servicio exista
-    // Asigna el precio y la cantidad del servicio
+    // Asigna el precio y la cantidad del servicioc
     public void addServicesToBooking(Booking booking, Set<BookingServiceRequestDto> services) {
         services.forEach(s -> {
             ExtraService service = extraServicesRepository.findById(s.getId())
@@ -130,9 +149,8 @@ public class BookingService {
             bookingService.setQuantity(quantity);
             bookingService.setExtraService(service);
 
+            bookingService.setBooking(booking);
             bookingServiceRepository.save(bookingService);
-            booking.addExtraService(bookingService);
-            
         });
     }
 
@@ -208,7 +226,6 @@ public class BookingService {
 
         addTablesToBooking(booking, addedTableIds);
         
-        System.out.println("Removed Tables: " + removedTableIds.size());
 
         removedTableIds.forEach(t -> {
             RestaurantTable table = restaurantTableRepository.findById(t)

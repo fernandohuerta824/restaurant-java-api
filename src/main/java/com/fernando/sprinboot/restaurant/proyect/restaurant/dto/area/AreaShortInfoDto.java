@@ -5,6 +5,7 @@ public class AreaShortInfoDto {
     private Long id;
     private String name;
     private Long parentAreaId;
+    private Boolean available;
 
 
     public AreaShortInfoDto() {
@@ -40,4 +41,14 @@ public class AreaShortInfoDto {
         this.parentAreaId = parentAreaId;
     }
 
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+
+    
 }
