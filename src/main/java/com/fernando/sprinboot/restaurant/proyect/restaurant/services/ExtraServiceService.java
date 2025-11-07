@@ -62,18 +62,9 @@ public class ExtraServiceService  {
             if(extraSevicesRepository.existsByNameAndIdNot(body.getName(), id)) {
                 throw new ResourceAlreadyExistsException("The service with the name " + body.getName() + " already exists");
             }
-            existingExtraService.setName(body.getName());
         }
 
-        if(body.getDescription() != null ) {
-            existingExtraService.setDescription(body.getDescription());
-        }
-
-        if(body.getPrice() != null ) {
-            existingExtraService.setPrice(body.getPrice());
-        }
-
-        ExtraService updatedExtraService = extraSevicesRepository.save(existingExtraService);
-        return extraServicesMapper.toDto(updatedExtraService);
+        extraServicesMapper.updateProductFromDto(body, existingExtraService);
+        return extraServicesMapper.toDto(existingExtraService);
     }
 }
