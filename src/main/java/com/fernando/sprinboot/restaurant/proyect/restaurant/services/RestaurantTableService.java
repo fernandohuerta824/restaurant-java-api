@@ -63,8 +63,7 @@ public class RestaurantTableService {
         
         Area area = areaRepository.findById(dto.getAreaId()).orElseThrow(() -> new ResourceNotFoundException("The area with id "  + dto.getAreaId() + " could not be found"));
         
-        RestaurantTable table = restaurantTableMapper.toEntity(dto);
-        table.setArea(area);
+        RestaurantTable table = restaurantTableMapper.toEntity(dto, area);
         restaurantTableRepository.save(table);
 
         return restaurantTableMapper.toDto(table);
@@ -78,26 +77,12 @@ public class RestaurantTableService {
             throw new ResourceAlreadyExistsException("The table with name " + dto.getName() + " already exists");
         }
 
+        Area area = table.getArea();
         if(dto.getAreaId() != null) {
-            Area area = areaRepository.findById(dto.getAreaId()).orElseThrow(() -> new ResourceNotFoundException("The area with id "  + dto.getAreaId() + " could not be found"));
-            table.setArea(area);
+            area = areaRepository.findById(dto.getAreaId()).orElseThrow(() -> new ResourceNotFoundException("The area with id "  + dto.getAreaId() + " could not be found"));
         }
 
-        if(dto.getName() != null) {
-            table.setName(dto.getName());
-        }
-
-        if(dto.getCapacity() != null) {
-            table.setCapacity(dto.getCapacity());
-        }
-
-        if(dto.getDescription() != null) {
-            table.setDescription(dto.getDescription());
-        }
-
-        if(dto.getAvailable() != null) {
-            table.setAvailable(dto.getAvailable());
-        }
+        restaurantTableMapper.updateEntity(dto, table, area);
 
         restaurantTableRepository.save(table);
 

@@ -48,7 +48,7 @@ public class ExtraServiceService  {
             throw new ResourceAlreadyExistsException("The service with the name" + body.getName() + " already exists");
         }
 
-        ExtraService extraService = extraServicesMapper.fromBodyToEntity(body);
+        ExtraService extraService = extraServicesMapper.toEntity(body);
         ExtraService savedExtraService = extraSevicesRepository.save(extraService);
         return extraServicesMapper.toDto(savedExtraService);
     }
@@ -64,7 +64,7 @@ public class ExtraServiceService  {
             }
         }
 
-        extraServicesMapper.updateProductFromDto(body, existingExtraService);
+        extraServicesMapper.updateProduct(body, existingExtraService);
         return extraServicesMapper.toDto(existingExtraService);
     }
 }
