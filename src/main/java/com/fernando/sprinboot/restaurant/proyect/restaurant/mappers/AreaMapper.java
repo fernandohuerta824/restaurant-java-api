@@ -14,39 +14,8 @@ import com.fernando.sprinboot.restaurant.proyect.restaurant.dto.area.AreaTreeDto
 import com.fernando.sprinboot.restaurant.proyect.restaurant.mappers.interfaces.BaseMapper;
 import com.fernando.sprinboot.restaurant.proyect.restaurant.models.Area;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AreaMapper extends BaseMapper<Area, AreaFullInfoDto> {
-    @Override
-    @Mapping(target = "parentArea", ignore = true)
-    AreaFullInfoDto toDto(Area entity);
-
-    @Mapping(target = "parentArea", ignore = true)
-    @Mapping(target = "tables", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "childrenAreas", ignore = true)
-    Area fromBodyToEntity(AreaRequestDto body);
-
-    @Mapping(target = "parentAreaId", expression = "java(mapParentAreaId(entity))")
-    AreaShortInfoDto toShortInfoDto(Area entity);
-
-    List<AreaShortInfoDto> toListShortInfoDto(List<Area> entities);
-
-    @Mapping(target = "childrenAreas", ignore = true)
-    AreaTreeDto toTreeDto(Area entity);
-
-    default AreaTreeDto setChildrenAreas(Area entity) {
-        if(entity == null) {
-            return null;
-        }
-
-
-        Set<AreaTreeDto> children = entity.getChildrenAreas()
-            .stream()
-            .map(this::setChildrenAreas)
-            .collect(Collectors.toSet());
-
-        return new AreaTreeDto(entity.getId(), entity.getName(), children);
-    }
 
     @AfterMapping
     default void mapParentDto(Area entity, @MappingTarget AreaFullInfoDto dto) {
@@ -64,13 +33,52 @@ public interface AreaMapper extends BaseMapper<Area, AreaFullInfoDto> {
             )
         );
     }
-    
-    @Named("mapParentAreaId")
-    default Long mapParentAreaId(Area area) {
-        if (area.getParentArea() == null) {
+
+    Area toEntity(AreaRequestDto body, @Context Area parentArea);
+
+    @AfterMapping
+    default void mapArea(
+        AreaRequestDto dto, 
+        @MappingTarget Area area,
+        @Context Area parentArea
+    ) {
+        area.setParentArea(parentArea);
+    }
+
+    void updateEntity(
+        AreaRequestDto dto,
+        @MappingTarget Area entity,
+        @Context Area parentArea
+    );
+
+    AreaShortInfoDto toShortInfoDto(Area entity);
+
+    @AfterMapping
+    default void mapParentAreaId(Area entity, @MappingTarget AreaShortInfoDto dto) {
+        if (entity.getParentArea() == null) {
+            dto.setParentAreaId(null);
+            return;
+        }
+        
+        dto.setParentAreaId(entity.getParentArea().getId());
+    }
+
+    List<AreaShortInfoDto> toListShortInfoDto(List<Area> entities);
+
+    @Mapping(target = "childrenAreas", ignore = true)
+    AreaTreeDto toTreeDto(Area entity);
+
+    default AreaTreeDto setChildrenAreas(Area entity) {
+        if(entity == null) {
             return null;
         }
-        return area.getParentArea().getId();
-    
+
+        Set<AreaTreeDto> children = entity.getChildrenAreas()
+            .stream()
+            .map(this::setChildrenAreas)
+            .collect(Collectors.toSet());
+
+        return new AreaTreeDto(entity.getId(), entity.getName(), children);
     }
+
 }

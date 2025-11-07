@@ -57,8 +57,7 @@ public class AreaService  {
         if (body.getParentAreaId() != null) {
             parentArea = findEntityById(body.getParentAreaId());
         }
-        Area areaToSave = areaMapper.fromBodyToEntity(body);
-        areaToSave.setParentArea(parentArea);
+        Area areaToSave = areaMapper.toEntity(body, parentArea);
         areaRepository.save(areaToSave);
 
         return areaMapper.toDto(areaToSave);
@@ -99,11 +98,10 @@ public class AreaService  {
                 throw new ResourceAlreadyExistsException("Area with name " + existingArea.getName() + " already exists");
             }
 
-            area.setName(body.getName());
         }
 
-        
-        Area parentArea = null;
+    
+        Area parentArea = area.getParentArea();
 
         if (body.getParentAreaId() != null) {
             //Verificar que el padre exista
@@ -120,17 +118,9 @@ public class AreaService  {
                 current = areaRepository.findShortInfoById(current.getParentAreaId()).orElse(null);
             }
 
-            area.setParentArea(parentArea);
         }
 
-        if(body.getDescription() != null) {
-            area.setDescription(body.getDescription());
-        }
-
-        if(body.getAvailable() != null) {
-            area.setAvailable(body.getAvailable());
-        }
-
+        areaMapper.updateEntity(body, area, parentArea);
         areaRepository.save(area);
         return areaMapper.toDto(area);
     }
